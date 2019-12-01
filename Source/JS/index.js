@@ -1,7 +1,3 @@
-var d3 = require("d3");
-var c3 = require("c3");
-var fs = require("fs");
-
 var jsonUri = "data:text/plain;base64,"+window.btoa(JSON.stringify(partJson));
 
 particlesJS.load('particles-js', jsonUri, function() {
