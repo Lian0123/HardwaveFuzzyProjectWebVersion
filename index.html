@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.2">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="./node_modules/c3/c3.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="./Source/CSS/index.css">
+
+    <script src="./Source/JS/Include/particlesjs-config.js"></script>
+    <script src="./Source/JS/Include/particles.js"></script>
+    <script src="./Source/JS/Include/vue.js"></script>
+    
+    <title>Hardwave Fuzzy Project</title>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <!--
+    <div id="components-demo" class="panel">
+            <button-counter></button-counter>
+        <div class="CONTENT">
+            <a>123</a>
+            <al-input></al-input>
+        </div>
+    </div>
+    -->
+
+    <div id="Panel" class="panel">
+       
+        <div class="TITLECONTENT BreathingAreaLight">
+               <nav>
+                   <div>
+                       <h1>{{TilteText}}</h1>
+                       <p v-if="TilteText != '錯誤界面'" href="#" @click="BackViewEvent()" class="TITLE_ABLBTN">上一步</p>
+                   </div>
+               </nav>
+               <hr>
+               
+       </div>
+
+
+        <!--程式首頁-->
+        <div v-if="IndexView.IsView">
+            <br>
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <b>使用說明：</b>
+                    <p>該程式用於建立，HardFuzzy控制器的程式碼生成。</p>
+
+                    <b>免則申明：</b>
+                    <p>該程式碼所生成之應用所造成之任何危害行為，本程式不會為任何損失的負責。</p>
+                    <div @click="NextViewEvent()"><al-button text="我同意使用規則"></al-button></div>
+                    
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <p><b>其他選項：</b></p>
+                    <div @click="DownLoadZip()"><al-button text="下載相依函式庫"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+        <!--建立專案-->
+        <div v-if="MakeProjectView.IsView">
+            <br>
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <p>專案名稱：<al-input holdertext="請在此輸入專案名稱" v-on:get-child-input-text="GetProjectNameTextEvent"></al-input></p>
+                    <div @click="FinSetProjectNameEvent()"><al-button text="建立專案"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--設定MF資料-->
+        <div v-if="DesignMumbershipFuncitonView.IsView">
+            <br>
+            <!--ROW 1-->
+            <al-input-panel  holdertext="請在此輸入MF名稱" titlename="MF名稱：" addtext="新增MF" v-on:get-child-input-text="AddNewMFEvent"></al-input-panel>
+            <br>
+
+            <!--ROW 2-->
+            <div v-for="(item, index) in DesignMumbershipFuncitonView.MFArray" class="CONTENT A ROW">
+                <div class="col10">
+                    <div class="BLOCK_CONTENT"><br>
+                        <p class="FixedP">{{item.Name}}</p>
+                    </div>
+                </div>
+
+
+                <div class="col6">
+                    <div class="BLOCK_CONTENT">
+                        <p @click="RemoveMFEvent(index)"><a href="#"><button class="ABLBTNSMALL"  type="button">移除MF</button></a></p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                        <p>歸屬精度設定：<input class="ABLINPUT" type="number" min="0" max="1" step="0.001" placeholder="請輸入歸屬值精細度" v-model="DesignMumbershipFuncitonView.AxisRate"/></p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 4-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                        <p>偏移值設定：<input class="ABLINPUT" type="number" step="1" placeholder="請輸入偏差值" v-model="DesignMumbershipFuncitonView.Offset"/></p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 4-->
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                        <p>請輸入正常值下限：<input class="ABLINPUT" type="number" step="1" min="0" placeholder="請輸入下限值" v-model="DesignMumbershipFuncitonView.DownSafe"/></p>
+                    </div>
+                </div>
+
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                        <p>請輸入正常值上限：<input class="ABLINPUT" type="number" step="1" placeholder="請輸入上限值" v-model="DesignMumbershipFuncitonView.UpSafe"/></p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 5-->
+            <div class="CONTENT A ROW">
+
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                        <p>回授設定：<select v-model="DesignMumbershipFuncitonView.HasBack" class="ABLSELECT">
+                            <option value="0">不使用</option>
+                            <option value="1">使用</option>
+                        </select></p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 6-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinDesignMumbershipFuncitonEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--設定FN資料-->
+        <div v-if="DesignFuzzyNumberView.IsView">
+            <br>
+            <div v-for="(item, index) in DesignFuzzyNumberView.MFArray">
+                <!--ROW 1-->
+                <div class=" CONTENT A ROW">
+                    <div class="col8">
+                        <div class="BLOCK_CONTENT">
+                            <div class='c3-editor' v-bind:id="item.MFName"></div>
+                        </div>
+                    </div>  
+                    <div class="col8">
+                        <div class="BLOCK_CONTENT">
+                        <b>MF名稱：</b>
+                        <p>FuzzyNumber：<input class="ABLINPUT" type="number" min="0" placeholder="X0" v-model.trim="item.X0Tmp"/></p>
+                        <p><input class="ABLINPUT" type="number" min="0" placeholder="X1" v-model.trim="item.X1Tmp"/></p>
+                        <p><input class="ABLINPUT" type="number" min="0" placeholder="X2" v-model.trim="item.X2Tmp"/></p>
+                        <p><input class="ABLINPUT" type="number" min="0" placeholder="X3" v-model.trim="item.X3Tmp"/></p>
+                        <div @click="SetFNEvent(index,true)"><al-button text="新增FN"></al-button></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <!--ROW 2-->
+                <div v-for="(subitem, subindex) in DesignFuzzyNumberView.MFArray[index].FN" class="CONTENT A ROW">
+                    <div class="col8">
+                        <p>data{{subindex+1}}(FN{{subindex}})</p>
+                    </div>
+                    <div class="col8">
+                        <p><a href="#" @click="ReomveMumbershipFuncitonEvent(index,subindex)"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">移除FN</button></a></p>
+                    </div>
+                </div>
+                <br>
+
+            </div>
+            <br>
+
+            <!--ROW 2-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinDesignFuzzyNumberViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>  
+        </div>
+       
+        <!--設定Rule-->
+        <div v-if="DesignRuleView.IsView">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                    <p>規則設計</p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="ClearRule()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">清空規則</button></a></p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="AddRule()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">新增規則</button></a></p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <!--ROW 2-->
+            <div  v-for="(item, index) in DesignRuleView.RuleList">
+                <div class="CONTENT A ROW" v-for="(subitem, subindex) in DesignRuleView.RuleList[index]">
+                    <div class="col2">
+                        <div v-if="subindex == 0" class="BLOCK_CONTENT"><br>
+                            <p class="FixedP">Rule{{index}}</p>
+                        </div>
+                        <div v-else class="BLOCK_CONTENT"><br>
+                            <p class="FixedP"> </p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectMFList">
+                                <option v-for="(ssubitem, ssubindex) in DesignRuleView.MFArray" v-bind:value="ssubindex">{{ssubitem.Name}}</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectFNList">
+                                <option v-for="(ssubitem, ssubindex) in DesignRuleView.MFArray[subitem.SelectMFList].FN" v-bind:value="ssubindex">FN{{ssubindex}}</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col1">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectPointLogic">
+                                <option value="0">></option>
+                                <option value="1">=</option>
+                                <option value="2"><</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectBaseValue">
+                                <option v-for="(ssubitem, ssubindex) in DesignRuleView.AxisRateArray" v-bind:value="ssubindex">{{ssubitem}}</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.OutLogic">
+                                <option value="0">Out 0</option>
+                                <option value="1">Out 1</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col1">
+                        <div class="BLOCK_CONTENT" >
+                            <p> <select class="ABLSELECT" v-model="subitem.ConnectLogic">
+                                <option value="0"></option>
+                                <option value="1">&</option>
+                                <option value="2">|</option>
+                                <option value="3">^</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p><a href="#" @click="AddSubRule(index)"><button class="ABLBTNSMALL"  type="button">增加關聯</button></a></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p><a href="#" @click="RemoveSubRule(index,subindex)"><button class="ABLBTNSMALL"  type="button">移除關聯</button></a></p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <br>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinDesignRuleViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+        <!--設定合併的FN-->
+        <div v-if="DesignDownDimView.IsView && DesignMumbershipFuncitonView.MFArray.length > 1">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                    <p>維度合併設計</p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="ClearDim()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">清空合併</button></a></p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="AddDim()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">新增合併</button></a></p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <!--ROW 2-->
+            <div v-for="(item, index) in DesignDownDimView.DimList">
+                <div class="CONTENT A ROW" v-for="(subitem, subindex) in DesignDownDimView.DimList[index]">
+                    <div class="col2">
+                        <div v-if="subindex == 0" class="BLOCK_CONTENT"><br>
+                            <p class="FixedP">Dim{{index}}</p>
+                        </div>
+                        <div v-else class="BLOCK_CONTENT">
+                            <br>
+                        </div>
+                    </div>
+
+                    <div class="col4">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectMFList">
+                                <option v-for="(ssubitem, ssubindex) in DesignRuleView.MFArray" v-bind:value="ssubindex">{{ssubitem.Name}}</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col6">
+                        <div class="BLOCK_CONTENT">
+                            <p> <select class="ABLSELECT" v-model="subitem.SelectBaseValue">
+                                <option v-for="(ssubitem, ssubindex) in DesignRuleView.AxisRateArray" v-bind:value="ssubindex">權重{{ssubitem}}</option>
+                            </select></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p><a href="#" @click="AddSubDim(index)"><button class="ABLBTNSMALL"  type="button">資加一維</button></a></p>
+                        </div>
+                    </div>
+
+                    <div class="col2">
+                        <div class="BLOCK_CONTENT">
+                            <p><a href="#" @click="RemoveSubDim(index)"><button class="ABLBTNSMALL"  type="button">減少一維</button></a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinDimDesignViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+            
+        </div>
+        <div v-else-if="DesignDownDimView.IsView">
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                        <p>維度合併設計：檢測只有單一一維度</p>
+                    </div>
+                </div>
+
+
+            </div>
+            <br>
+
+            <!--ROW 2-->
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                        <p>無操作選項，請直接按下"下一步"</p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinNotSetDimDesignViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+        <!--設定NN化架構-->
+        <div v-if="DesignNeuralNetworkView.IsView && this.DesignMumbershipFuncitonView.HasBack">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                    <p>選擇要使用CNN架構(不想設置請略過)</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 2-->
+
+            <div class="CONTENT A ROW">
+                <div class="col8">
+                    <div class="BLOCK_CONTENT">
+                        <p>接層設計</p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="ClearLayer()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">清空網路層</button></a></p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p><br><a href="#" @click="AddLayer()"><button class="ABLBTNSMALL" class="FixedHight30px" type="button">新增網路層</button></a></p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <div class="CONTENT A ROW">
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p>第0層</p>
+                    </div>
+                </div>
+
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p>自池化運算</p>
+                    </div>
+                </div>
+
+                <div class="col6">
+                    <div class="BLOCK_CONTENT">
+                        <p>總層大小{{DesignNeuralNetworkView.MatrixRow}}*{{DesignNeuralNetworkView.MatrixRow}}(Kernel：2*2)</p>
+                    </div>
+                </div>
+
+                <div class="col2">
+                    <div class="BLOCK_CONTENT">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW" v-for="(item, index) in DesignNeuralNetworkView.LayerList">
+                <div class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <br><p class="FixedP">第{{index+1}}層</p>
+                    </div>
+                </div>
+
+                <div v-if="item.IsEdit" class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p> <select class="ABLSELECT" v-model="item.SelectLayerType">
+                            <option v-for="(subitem, subindex) in DesignNeuralNetworkView.LayerTypeArray" v-bind:value="subindex">{{subitem}}</option>
+                        </select></p>
+                    </div>
+                </div>
+                <div v-else class="col4">
+                    <div class="BLOCK_CONTENT">
+                        <p>{{DesignNeuralNetworkView.LayerTypeArray[item.SelectLayerType]}}</p>
+                    </div>
+                </div>
+
+                <div v-if="item.IsEdit" class="col6">
+                    <div v-if="item.SelectLayerType != '1'" class="BLOCK_CONTENT">
+                        <p> <select class="ABLSELECT" v-model="item.SelectLayerSum">
+                            <option v-for="(subitem, subindex) in item.SelectLayerAllSum" v-bind:value="subindex">Kernel大小{{subitem}}*{{subitem}}</option>
+                        </select></p>
+                    </div>
+                    <div v-else class="BLOCK_CONTENT">
+                        <p>不適用</p>
+                    </div>
+                </div>
+                <div v-else class="col6">
+                    <div v-if="item.SelectLayerType != '1'" class="BLOCK_CONTENT">
+                        <p>Kernel大小{{item.SelectLayerAllSum[item.SelectLayerSum]}}*{{item.SelectLayerAllSum[item.SelectLayerSum]}}</p>
+                    </div>
+                    <div v-else class="BLOCK_CONTENT">
+                        <p>不適用</p>
+                    </div>
+                </div>
+
+                <div class="col2">
+                    <div class="BLOCK_CONTENT">
+                        <p><a href="#" @click="RemoveLayer(index)"><button class="ABLBTNSMALL"  type="button">移除以下</button></a></p>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+            <!--ROW 5-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                        <p>連線至ANN總節點：<input class="ABLINPUT" type="number" min="0" step="1" placeholder="請輸入ANN總節點數" v-model="DesignNeuralNetworkView.ANNSum"/></p>
+                    </div>
+                </div>
+            </div>
+
+            <!--ROW 6-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="FinDesignNeuralNetworkViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+
+        </div>
+        <div v-else-if="DesignNeuralNetworkView.IsView">
+
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                    <p>無回授架構，請按下一步</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 2-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="NextViewEvent()"><al-button text="下一步"></al-button></div>
+                </div>
+            </div>
+        </div>
+
+        <!--專案確認界面-->
+        <div v-if="ProjectCheckView.IsView">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                        <h2>專案確認</h2>
+                    </div>
+                </div>
+            </div>
+            <br>
+    
+            <!--ROW 2-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>專案設定：</h3>
+                    <p>專案名：{{MakeProjectView.ProjectName}}.sv</p>
+                    <p>偏移值：{{DesignMumbershipFuncitonView.Offset}}</p>
+                    <p>刻度值：{{DesignMumbershipFuncitonView.AxisRate}}</p>
+                    
+                </div>
+            </div>
+            <br>
+
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>成員函數：</h3>
+                    <p v-for="(item, index) in DesignMumbershipFuncitonView.MFArray">{{item.MFName}}({{item.Name}})：<b v-for="subitem in item.FN">[{{subitem.X0}},{{subitem.X1}},{{subitem.X2}},{{subitem.X3}}]</b></b> </p>
+                </div>
+            </div>
+            <br>
+
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>Rule設定：</h3>
+                    <p v-for="(item, index) in DesignRuleView.RuleList">
+                        <b v-for="(subitem, subindex) in item">
+                            <b v-if="subindex == 0">IF</b>
+                            MF{{subitem.SelectMFList}}_FN{{subitem.SelectFNList}}
+                            {{ProjectCheckView.PointLogicMap[subitem.SelectPointLogic]}}
+                            {{DesignRuleView.AxisRateArray[subitem.SelectBaseValue]}}
+                            <b v-if="subitem.ConnectLogic == 0"> THEN Out '{{subitem.OutLogic}}' To Bus[{{index}}]<br></b>
+                            <b v-else>{{ProjectCheckView.ConnectLogicMap[subitem.ConnectLogic]}}</b>
+                        </b>
+                    </p>
+                </div>
+            </div>
+            <br>
+    
+            <div  v-if="DesignDownDimView.DimList.length > 0" class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>降為度權重：</h3>
+                    <p v-for="(item, index) in DesignDownDimView.DimList">
+                        合併維度{{index}}：<br>
+                        <b v-for="(subitem, subindex) in DesignDownDimView.DimList[index]">MF{{subitem.SelectMFList}}：權重{{DesignRuleView.AxisRateArray[subitem.SelectBaseValue]}}<br></b>
+                    </p>
+                </div>
+            </div>
+            <br>
+
+            <div v-if="DesignNeuralNetworkView.LayerList.length > 0" class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>使用網路模型：</h3>
+                    <p>
+                        <b>第0層：</b><br>
+                        功能：自池化擴張<br>
+                        此層大小：{{DesignNeuralNetworkView.MatrixRow}}*{{DesignNeuralNetworkView.MatrixRow}}<br>
+                        下層大小：{{DesignNeuralNetworkView.MatrixRow-2+1}}*{{DesignNeuralNetworkView.MatrixRow-2+1}}<br>
+                        Kernel大小：2*2
+                    </p>
+                    <p v-for="(item, index) in DesignNeuralNetworkView.LayerList">
+                        <b>第{{index+1}}層：</b><br>
+                        功能：{{DesignNeuralNetworkView.LayerTypeArray[item.SelectLayerType]}}<br>
+                        此層大小：{{item.ThisHave}}*{{item.ThisHave}}<br>
+                        Kernel大小：<element v-if="item.SelectLayerType == 1">不適用</element><element v-else>{{item.SelectLayerAllSum[item.SelectLayerSum]}}*{{item.SelectLayerAllSum[item.SelectLayerSum]}}</element><br>
+                    </p>
+
+                </div>
+            </div>
+            <br>
+
+            <div v-if="DesignDownDimView.DimList.length > 0" class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>維度降低層以下結構需手動建立：</h3>
+                    <p>1.維度降低的計算連接</p>
+                    <p>2.覆寫控制條件式</p>
+                </div>
+            </div>
+            <br>
+
+            <div v-if="DesignNeuralNetworkView.LayerList.length > 0" class="CONTENT A ROW">
+                <div class="col16">
+                    <h3>仿神經網路層以下結構需手動建立：</h3>
+                    <p>1.仿捲積運算的特徵值</p>
+                    <p>2.仿ANN連接節點</p>
+                    <p>3.自適應調整遮罩控制條件與初始化遮罩控制訊號</p>
+                </div>
+            </div>
+            <br>
+    
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="OutputFile()"><al-button text="匯出為sv檔"></al-button></div>
+                </div>
+            </div>
+    
+        </div>
+
+        <!--導出專案界面-->
+        <div v-if="ExportProjectView.IsView">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                    <p>專案已輸出完成</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+    
+            <!--ROW 2-->   
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="ChangeViewEvent(0)"><al-button text="完成"></al-button></div>
+                </div>
+            </div>
+    
+        </div>
+
+        <!--錯誤處理用界面-->
+       <div v-if="ErrorView.IsView">
+            <br>
+            <!--ROW 1-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div class="BLOCK_CONTENT">
+                    <p>錯誤</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+    
+            <!--ROW 2-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <p>當你看到這頁面時，代表你可能做出了無法恢復的錯誤操作，而進入此頁面。</p>
+                    <p>在此請回到首頁，並重新進行操作，謝謝。</p>
+                </div>
+            </div>
+            <br>
+
+            <!--ROW 3-->
+            <div class="CONTENT A ROW">
+                <div class="col16">
+                    <div @click="ChangeViewEvent(0)"><al-button text="匯出為sv檔"></al-button></div>
+                </div>
+            </div>
+       </div>
+       
+        <br><br><br>
+    </div>
+</body>
+</html>
+
+<script src="./Source/JS/WriteSystemVreilogModule/ProgramDataDefine.js"></script>
+<script src="./Source/JS/index.js"></script>
