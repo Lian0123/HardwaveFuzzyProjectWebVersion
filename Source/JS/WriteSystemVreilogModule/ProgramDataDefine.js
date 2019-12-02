@@ -65,7 +65,7 @@ var WriteFile = function WriteFile(){
     module HardFuzzyCtl(clk,clearError,ctlSave,`+GetAllDevPortStr()+`OutBus,OutErrorBus,NeuralBus);`;
     }else{
         WrtieString += `
-    module HardFuzzyCtl(clk,clearError,ctlSave,`+GetAllDevPortStr()+`,OutBus,OutErrorBus);`;
+    module HardFuzzyCtl(clk,clearError,ctlSave,`+GetAllDevPortStr()+`OutBus,OutErrorBus);`;
     }
 
     WrtieString += `
