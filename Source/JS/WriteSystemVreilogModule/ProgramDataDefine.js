@@ -74,7 +74,7 @@ var WriteFile = function WriteFile(){
         parameter DevValue    = ` + Panel.DesignMumbershipFuncitonView.DevValue + `;
         
         //==========================================================
-        // Prot Define
+        // Port Define
         //==========================================================
         input  bit      clk;
         input  bit      clearError;
