@@ -443,12 +443,12 @@ var Panel = new Vue({
 
 
             if(this.DesignFuzzyNumberView.MFArray[index].X0Tmp < this.DesignMumbershipFuncitonView.MFArray[index].DownSafe || this.DesignFuzzyNumberView.MFArray[index].X1Tmp < this.DesignMumbershipFuncitonView.MFArray[index].DownSafe || this.DesignFuzzyNumberView.MFArray[index].X2Tmp < this.DesignMumbershipFuncitonView.MFArray[index].DownSafe || this.DesignFuzzyNumberView.MFArray[index].X3Tmp < this.DesignMumbershipFuncitonView.MFArray[index].DownSafe){
-                alert("FN節點輸入需皆小於等於FN"+(index+1)+"設定下界("+this.DesignMumbershipFuncitonView.DownSafe+")","錯誤");
+                alert("FN節點輸入需皆小於等於FN"+(index+1)+"設定下界("+this.DesignMumbershipFuncitonView.MFArray[index].DownSafe+")","錯誤");
                 return;
             }
         
             if(this.DesignFuzzyNumberView.MFArray[index].X0Tmp > this.DesignFuzzyNumberView.MFArray[index].UpSafe || this.DesignFuzzyNumberView.MFArray[index].X1Tmp > this.DesignMumbershipFuncitonView.MFArray[index].UpSafe || this.DesignFuzzyNumberView.MFArray[index].X2Tmp  > this.DesignMumbershipFuncitonView.MFArray[index].UpSafe || this.DesignFuzzyNumberView.MFArray[index].X3Tmp  > this.DesignMumbershipFuncitonView.MFArray[index].UpSafe){
-                alert("FN節點輸入需皆小於等於FN"+(index+1)+"設定上界("+this.DesignMumbershipFuncitonView.UpSafe+")","錯誤");
+                alert("FN節點輸入需皆小於等於FN"+(index+1)+"設定上界("+this.DesignMumbershipFuncitonView.MFArray[index].UpSafe+")","錯誤");
                 return;
             }
 
